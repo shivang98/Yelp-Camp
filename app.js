@@ -15,18 +15,20 @@ var campgroundSchema = mongoose.Schema({
 var Campground = mongoose.model("Campground", campgroundSchema);
 
 // Starting data
-// Campground.create({
-//     name: "Lancedown", 
-//     image:"https://www.reserveamerica.com/webphotos/NH/pid270015/0/540x360.jpg",
-//     description: "Nice and beautiful quite place"
-// }, function(err, campgrounds){
-//     if(err){
-//         console.log(err);
-//     } else{
-//         console.log("Added new campground");
-//         console.log(campgrounds);
-//     }
-// });
+
+/*
+Campground.create({
+    name: "Lancedown", 
+    image:"https://www.reserveamerica.com/webphotos/NH/pid270015/0/540x360.jpg",
+    description: "Nice and beautiful quite place"
+}, function(err, campgrounds){
+    if(err){
+        console.log(err);
+    } else{
+        console.log("Added new campground");
+        console.log(campgrounds);
+    }
+}); */
 
 
 app.get('/', function(req, res){
