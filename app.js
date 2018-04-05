@@ -1,35 +1,56 @@
 var express = require('express');
 var app = express();
 var bodyParser = require("body-parser");
+var mongoose = require('mongoose');
+mongoose.connect("mongodb://localhost/yelp_camp");
 app.use(bodyParser.urlencoded({extended: true}));
-
 app.set('view engine', 'ejs');
 
-var campgrounds = [
-    {name: "Rishikesh", image:"http://www.suttonfalls.com/communities/4/004/012/498/244//images/4628314067.jpg"},
-    {name: "Lancedown", image:"https://www.reserveamerica.com/webphotos/NH/pid270015/0/540x360.jpg"},
-    {name: "Manali", image:"http://farm9.staticflickr.com/8605/16573646931_22fc928bf9_o.jpg"},
-    {name: "Rishikesh", image:"http://www.suttonfalls.com/communities/4/004/012/498/244//images/4628314067.jpg"},
-    {name: "Lancedown", image:"https://www.reserveamerica.com/webphotos/NH/pid270015/0/540x360.jpg"},
-    {name: "Manali", image:"http://farm9.staticflickr.com/8605/16573646931_22fc928bf9_o.jpg"},
-    {name: "Rishikesh", image:"http://www.suttonfalls.com/communities/4/004/012/498/244//images/4628314067.jpg"},
-    {name: "Lancedown", image:"https://www.reserveamerica.com/webphotos/NH/pid270015/0/540x360.jpg"},
-    {name: "Manali", image:"http://farm9.staticflickr.com/8605/16573646931_22fc928bf9_o.jpg"},
-];
+var campgroundSchema = mongoose.Schema({
+    name: String,
+    image: String
+});
+
+var Campground = mongoose.model("Campground", campgroundSchema);
+// Starting data
+// Campground.create({
+//     name: "Lancedown", 
+//     image:"https://www.reserveamerica.com/webphotos/NH/pid270015/0/540x360.jpg"
+// }, function(err, campgrounds){
+//     if(err){
+//         console.log(err);
+//     } else{
+//         console.log("Added new campground");
+//         console.log(campgrounds);
+//     }
+// });
+
 
 app.get('/', function(req, res){
     res.render('landing');
 });
 
 app.get('/campgrounds', function(req, res){
-    res.render('campgrounds', {campgrounds: campgrounds});
+    Campground.find({}, function(err, newCampgrounds){
+        if(err){
+            console.log(err);
+        } else{
+            res.render('campgrounds', {campgrounds: newCampgrounds});
+        }
+    });
 });
 
 app.post('/campgrounds', function(req, res){
     var name = req.body.name;
     var image = req.body.image;
-    campgrounds.push({name: name, image: image});
-    res.redirect('/campgrounds');
+    var newCampground = {name: name, image:image};
+    Campground.create(newCampground, function(err, newCampground){
+        if(err){
+            console.log(err);
+        } else{
+            res.redirect('/campgrounds');        
+        }
+    })
 });
 
 app.get('/campgrounds/new', function(req, res){
