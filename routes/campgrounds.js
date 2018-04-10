@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Campground = require("../models/campgrounds");
+var middlewareObj = require("../middleware");
 
 router.get('/', function(req, res){
     res.render('landing');
@@ -16,7 +17,7 @@ router.get('/campgrounds', function(req, res){
     });
 });
 
-router.post('/campgrounds',isLoggedIn, function(req, res){
+router.post('/campgrounds',middlewareObj.isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
     var dec = req.body.description;
@@ -34,7 +35,7 @@ router.post('/campgrounds',isLoggedIn, function(req, res){
     });
 });
 
-router.get('/campgrounds/new',isLoggedIn, function(req, res){
+router.get('/campgrounds/new',middlewareObj.isLoggedIn, function(req, res){
     res.render('campgrounds/new');
 });
 
@@ -49,7 +50,7 @@ router.get('/campgrounds/:id', function(req, res){
     });
 });
 
-router.get('/campgrounds/:id/edit', function(req, res){
+router.get('/campgrounds/:id/edit',middlewareObj.isCampgroundAuth, function(req, res){
     Campground.findById(req.params.id, function(err, foundCampground){
         if (err){
             console.log(err);
@@ -60,7 +61,7 @@ router.get('/campgrounds/:id/edit', function(req, res){
     })
 });
 
-router.put('/campgrounds/:id', function(req, res){
+router.put('/campgrounds/:id',middlewareObj.isCampgroundAuth, function(req, res){
     Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
         if(err){
             console.log(err);
@@ -72,7 +73,7 @@ router.put('/campgrounds/:id', function(req, res){
     });
 });
 
-router.delete('/campgrounds/:id/delete', function(req, res){
+router.delete('/campgrounds/:id',middlewareObj.isCampgroundAuth, function(req, res){
     Campground.findByIdAndRemove(req.params.id, function(err){
         if(err){
             res.redirect("/campgrounds");
@@ -81,12 +82,5 @@ router.delete('/campgrounds/:id/delete', function(req, res){
         }
     });
 });
-
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    } 
-    res.redirect("/login");
-}
 
 module.exports = router;
