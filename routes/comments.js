@@ -62,6 +62,7 @@ router.delete("/campgrounds/:id/comments/:comment_id",middlewareObj.isCommentAut
         if(err){
             res.redirect("back");
         } else{
+            req.flash("success", "Successfully deleted comment");
             res.redirect("/campgrounds/" + req.params.id);
         }
     });
