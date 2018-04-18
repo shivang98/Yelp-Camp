@@ -14,8 +14,8 @@ seedDb      = require("./seeds");
 var commentsRoutes = require("./routes/comments"),
 campgroundsRoutes = require("./routes/campgrounds");
 indexRoutes = require("./routes/index");
-
-mongoose.connect("mongodb://shivang:mastermind@ds247569.mlab.com:47569/yelpcampmaster");
+// console.log(process.env.DATABASEURL);
+mongoose.connect(process.env.DATABASEURL);
 // mongoose.connect("mongodb://localhost/yelp_camp");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
